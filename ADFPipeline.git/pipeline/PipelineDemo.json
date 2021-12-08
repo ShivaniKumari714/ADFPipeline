@@ -1,0 +1,147 @@
+{
+	"name": "PipelineDemo",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "SysDateTime",
+					"value": {
+						"value": "@formatDateTime(utcnow(),'yyyy/MM/dd hh:mm:ss')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "select id, \nsourcetype,\njson_value(sourcedetails,'$.ServerAddress') as servername,\njson_value(sourcedetails,'$.databaseName') as databasename,\njson_value(sourcedetails,'$.schema') as [schema],\njson_value(sourcedetails,'$.username') as username,\njson_value(sourcedetails,'$.password') as [password],\njson_value(sourcedetails,'$.tablename') as tablename,\njson_value(pipelinedetails,'$.datafactoryName') as datafactoryName,\njson_value(pipelinedetails,'$.pipelineName') as pipelineName,\njson_value(destinationdetails,'$.destination1') as destination1,\njson_value(destinationdetails,'$.destination2') as destination2,\nlastmodifieddate,\nfolderpath,\nupdatecolumn,\nmerge_stmt from metadata\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable1",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup1').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copydata_from_sqldb_to_adlgen",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('select * from ' , item().schema , '.' , item().tablename , ' where ', item().updatecolumn , ' > cast(''' , item().lastmodifieddate , ''' as varchar(100))')",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "AzureSqldb_source",
+									"type": "DatasetReference",
+									"parameters": {
+										"tablename": {
+											"value": "@concat(item().tablename, '/' ,replace(replace(variables('SysDateTime'), ':', '/'), ' ', '/'))",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Parquet1",
+									"type": "DatasetReference",
+									"parameters": {
+										"folderpath": {
+											"value": "@concat(item().tablename, '/' ,replace(replace(variables('SysDateTime'), ':', '/'), ' ', '/'))",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"SysDateTime": {
+				"type": "String",
+				"defaultValue": " @formatDateTime(utcnow(),'yyyy/MM/dd hh:mm:ss')"
+			}
+		},
+		"annotations": []
+	}
+}
