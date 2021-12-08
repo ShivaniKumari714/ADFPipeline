@@ -77,7 +77,12 @@
 								"secureOutput": false,
 								"secureInput": false
 							},
-							"userProperties": [],
+							"userProperties": [
+								{
+									"name": "tablename",
+									"value": "@item().tablename"
+								}
+							],
 							"typeProperties": {
 								"source": {
 									"type": "AzureSqlSource",

@@ -14,19 +14,6 @@
 			},
 			"compressionCodec": "snappy"
 		},
-		"schema": [
-			{
-				"name": "empid",
-				"type": "INT32"
-			},
-			{
-				"name": "empName",
-				"type": "UTF8"
-			},
-			{
-				"name": "empdate",
-				"type": "DATE"
-			}
-		]
+		"schema": []
 	}
 }
