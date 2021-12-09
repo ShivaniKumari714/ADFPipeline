@@ -5,13 +5,13 @@
 		"factoryName": {
 			"value": "ADFPipelineDemo02"
 		},
-		"AzureSynapseAnalytics1_connectionString": {
+		"AzureDataLakeStorage1_accountKey": {
 			"value": ""
 		},
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
 		},
-		"AzureDataLakeStorage1_accountKey": {
+		"AzureSynapseAnalytics1_connectionString": {
 			"value": ""
 		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
