@@ -158,17 +158,22 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "ParquetSource",
+									"type": "DelimitedTextSource",
 									"storeSettings": {
 										"type": "AzureBlobFSReadSettings",
 										"recursive": true,
-										"wildcardFileName": "*.parquet",
+										"wildcardFileName": {
+											"value": "*csv",
+											"type": "Expression"
+										},
 										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
 									}
 								},
 								"sink": {
 									"type": "SqlDWSink",
-									"sqlWriterUseTableLock": false,
 									"tableOption": "autoCreate",
 									"disableMetricsCollection": false
 								},
@@ -184,7 +189,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "Parquet2",
+									"referenceName": "ADLGen2_sourceCSV",
 									"type": "DatasetReference"
 								}
 							],
