@@ -5,9 +5,6 @@
 		"factoryName": {
 			"value": "ADFPipelineDemo02"
 		},
-		"AzureDataLakeStorage1_accountKey": {
-			"value": ""
-		},
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
 		},
