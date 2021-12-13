@@ -244,105 +244,80 @@
 								"secureOutput": false,
 								"secureInput": false
 							},
-							"userProperties": []
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[sp_update_status]",
+								"storedProcedureParameters": {
+									"datafactoryname": {
+										"value": {
+											"value": "@pipeline().datafactory",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"errormsg": {
+										"value": null,
+										"type": "String"
+									},
+									"folderpath": {
+										"value": {
+											"value": "@concat('select * from ' , item().schema , '.' , item().tablename , ' where ', item().updatecolumn , ' > cast(''' , item().lastmodifieddate , ''' as varchar(100))')",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"id": {
+										"value": {
+											"value": "@item().id",
+											"type": "Expression"
+										},
+										"type": "Int32"
+									},
+									"merge": {
+										"value": null,
+										"type": "String"
+									},
+									"pipelinename": {
+										"value": {
+											"value": "@pipeline().pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"rowscopied": {
+										"value": "",
+										"type": "String"
+									},
+									"runid": {
+										"value": {
+											"value": "@pipeline().runid",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"sorf": {
+										"value": {
+											"value": "'S'",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"sysdatetime": {
+										"value": {
+											"value": "@variables('SysDateTime')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "AzureSynapseAnalytics1",
+								"type": "LinkedServiceReference"
+							}
 						}
 					]
 				}
-			},
-			{
-				"name": "Stored procedure5",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "Lookup1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"storedProcedureName": "[dbo].[sp_update_status]",
-					"storedProcedureParameters": {
-						"datafactoryname": {
-							"value": {
-								"value": "@pipeline().Datafactory",
-								"type": "Expression"
-							},
-							"type": "String"
-						},
-						"errormsg": {
-							"value": {
-								"value": "@activity('Lookup1').output.error",
-								"type": "Expression"
-							},
-							"type": "String"
-						},
-						"folderpath": {
-							"value": null,
-							"type": "String"
-						},
-						"id": {
-							"value": "",
-							"type": "Int32"
-						},
-						"merge": {
-							"value": "",
-							"type": "String"
-						},
-						"pipelinename": {
-							"value": "",
-							"type": "String"
-						},
-						"rowscopied": {
-							"value": "",
-							"type": "String"
-						},
-						"runid": {
-							"value": "",
-							"type": "String"
-						},
-						"sorf": {
-							"value": "",
-							"type": "String"
-						},
-						"sysdatetime": {
-							"value": null,
-							"type": "String"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "AzureSynapseAnalytics1",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "Stored procedure6",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "Lookup1",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": []
 			}
 		],
 		"variables": {
