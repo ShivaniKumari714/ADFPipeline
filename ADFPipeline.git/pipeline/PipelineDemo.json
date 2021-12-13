@@ -69,20 +69,7 @@
 						{
 							"name": "Copydata_from_sqldb_to_adlgen",
 							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "Stored procedure3",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								},
-								{
-									"activity": "Stored procedure4",
-									"dependencyConditions": [
-										"Failed"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -220,9 +207,16 @@
 							]
 						},
 						{
-							"name": "Stored procedure3",
+							"name": "Stored procedure7",
 							"type": "SqlServerStoredProcedure",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Copydata_from_sqldb_to_adlgen",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -233,9 +227,16 @@
 							"userProperties": []
 						},
 						{
-							"name": "Stored procedure4",
+							"name": "Stored procedure8",
 							"type": "SqlServerStoredProcedure",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Copydata_from_sqldb_to_adlgen",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -266,12 +267,74 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[sp_update_status]",
+					"storedProcedureParameters": {
+						"datafactoryname": {
+							"value": {
+								"value": "@pipeline().Datafactory",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"errormsg": {
+							"value": {
+								"value": "@activity('Lookup1').output.error",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"folderpath": {
+							"value": null,
+							"type": "String"
+						},
+						"id": {
+							"value": null,
+							"type": "Int32"
+						},
+						"merge": {
+							"value": "",
+							"type": "String"
+						},
+						"pipelinename": {
+							"value": "",
+							"type": "String"
+						},
+						"rowscopied": {
+							"value": "",
+							"type": "String"
+						},
+						"runid": {
+							"value": "",
+							"type": "String"
+						},
+						"sorf": {
+							"value": "",
+							"type": "String"
+						},
+						"sysdatetime": {
+							"value": "",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics1",
+					"type": "LinkedServiceReference"
+				}
 			},
 			{
 				"name": "Stored procedure6",
 				"type": "SqlServerStoredProcedure",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Lookup1",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
