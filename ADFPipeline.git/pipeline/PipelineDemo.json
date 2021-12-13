@@ -314,7 +314,7 @@
 							"type": "String"
 						},
 						"sysdatetime": {
-							"value": "",
+							"value": null,
 							"type": "String"
 						}
 					}
