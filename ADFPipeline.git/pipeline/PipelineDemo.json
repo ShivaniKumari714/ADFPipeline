@@ -290,7 +290,7 @@
 							"type": "String"
 						},
 						"id": {
-							"value": null,
+							"value": "",
 							"type": "Int32"
 						},
 						"merge": {
