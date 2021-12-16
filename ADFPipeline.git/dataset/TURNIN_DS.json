@@ -1,0 +1,15 @@
+{
+	"name": "TURNIN_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Oracle1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ALPINE"
+		},
+		"annotations": [],
+		"type": "OracleTable",
+		"schema": []
+	}
+}
